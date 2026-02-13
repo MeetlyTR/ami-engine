@@ -5,6 +5,36 @@
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
+> **Decision support kernel** for ethical AI systems. Provides deterministic, auditable moral reasoning with automatic escalation to human oversight.
+
+---
+
+## Quick Start
+
+```bash
+pip install ami-engine
+```
+
+```python
+from ami_engine import decide
+
+result = decide({
+    "risk": 0.7, "severity": 0.8, "physical": 0.6, "social": 0.5,
+    "context": 0.4, "compassion": 0.5, "justice": 0.9,
+    "harm_sens": 0.5, "responsibility": 0.7, "empathy": 0.6
+}, profile="scenario_test")
+
+print(f"Action: {result['action']}, Level: L{result['escalation']}")
+# Action: [0.0, 1.0, 0.58, 0.29], Level: L1
+```
+
+**CLI:**
+```bash
+ami-engine dashboard    # Start visualization dashboard
+ami-engine realtime      # Run live test
+ami-engine tests         # Run test suite
+```
+
 ---
 
 ## What It Does
