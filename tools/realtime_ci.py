@@ -77,7 +77,7 @@ def main(steps=30, sleep_sec=1.0, profile="scenario_test", jsonl_path="traces_li
         
         time.sleep(sleep_sec)
     
-    print(f"\n✅ Generated {steps} traces")
+    print(f"\n[OK] Generated {steps} traces")
     print(f"   Escalation levels: L0={level_counts[0]}, L1={level_counts[1]}, L2={level_counts[2]}")
     print(f"   Human escalations: {human_escalations}")
     print(f"   File: {jsonl_path}")
@@ -87,13 +87,13 @@ def main(steps=30, sleep_sec=1.0, profile="scenario_test", jsonl_path="traces_li
         lines = len(Path(jsonl_path).read_text(encoding="utf-8").strip().split("\n"))
         print(f"   Lines written: {lines}")
         if lines == steps:
-            print("   ✅ File validation passed")
+            print("   [OK] File validation passed")
             return 0
         else:
-            print(f"   ❌ File validation failed: expected {steps}, got {lines}")
+            print(f"   [FAIL] File validation failed: expected {steps}, got {lines}")
             return 1
     else:
-        print(f"   ❌ File not found: {jsonl_path}")
+        print(f"   [FAIL] File not found: {jsonl_path}")
         return 1
 
 
