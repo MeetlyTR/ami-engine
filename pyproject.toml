@@ -10,7 +10,10 @@ readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "Apache-2.0"}
 authors = [
-    {name = "AMI-ENGINE Contributors"}
+    {name = "Mucahit Muzaffer", email = "mucahit.muzaffer@gmail.com"}
+]
+maintainers = [
+    {name = "Mucahit Muzaffer", email = "mucahit.muzaffer@gmail.com"}
 ]
 keywords = ["ethics", "decision-making", "safety", "ai", "moral-reasoning", "auditability"]
 classifiers = [

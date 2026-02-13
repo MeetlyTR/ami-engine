@@ -118,7 +118,8 @@ If the adapter layer sends data in a format other than what AMI-ENGINE expects:
 - **Community Support**: Via GitHub Issues
 - **Best Effort**: Respond as quickly as possible
 - **No SLA**: No guaranteed response time
-- **Security Contact**: Private channel for security vulnerabilities (GitHub Security Advisory)
+- **Contact**: mucahit.muzaffer@gmail.com
+- **Security Contact**: For security vulnerabilities, please contact mucahit.muzaffer@gmail.com or use GitHub Security Advisory
 
 ---
 

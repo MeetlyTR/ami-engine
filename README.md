@@ -152,6 +152,8 @@ Apache-2.0 License — See LICENSE file for details.
 
 See the GitHub repository to open issues and submit PRs.
 
+**Contact**: mucahit.muzaffer@gmail.com
+
 **Security**: Please use the private channel for security vulnerability reports (specified in USAGE_POLICY.md).
 
 ---
