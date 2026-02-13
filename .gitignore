@@ -56,6 +56,11 @@ archive/
 *.log
 examples_traces.jsonl
 
+# Test virtual environments
+.venv_test/
+.venv_wheel_test/
+.venv_pypi_test/
+
 # Streamlit
 .streamlit/
 

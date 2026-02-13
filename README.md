@@ -224,6 +224,26 @@ See the GitHub repository to open issues and submit PRs.
 
 ---
 
+## Intellectual Position
+
+AMI-ENGINE is an open-source **reference implementation** of an ethical decision governance layer.
+
+The value of this project lies not only in the code, but in:
+- **The architecture**: L0/L1/L2 escalation framework
+- **The safety philosophy**: Human-in-the-loop, fail-safe mechanisms
+- **The validation methodology**: Deterministic replay, trace auditability
+- **The governance model**: Domain-agnostic decision regulation
+
+**Commercial or institutional usage** is expected to involve direct collaboration with the author for:
+- Domain-specific adapter development
+- Custom configuration profiles
+- Integration support
+- Compliance validation
+
+This project serves as a **foundational reference** for ethical AI decision systems. While the code is freely available under Apache-2.0, the architectural insights, safety patterns, and governance approach represent years of research and engineering.
+
+---
+
 ## Version
 
 **1.0.0** — First stable release
