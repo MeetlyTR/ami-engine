@@ -105,7 +105,7 @@ def cmd_demo(args):
         # TraceCollector doesn't have close(), it auto-flushes
     
     print(f"\n[OK] Generated {args.steps} traces")
-    print(f"   Saved to: {collector.jsonl_path}")
+    print(f"   Saved to: {collector._jsonl_path}")
     print(f"\nNext steps:")
     print(f"   1. View traces: ami-engine dashboard")
     print(f"   2. Load file: {collector.jsonl_path}")
