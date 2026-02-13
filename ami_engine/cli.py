@@ -18,10 +18,23 @@ ROOT = Path(__file__).resolve().parent.parent
 
 def cmd_dashboard(args):
     """Start Streamlit dashboard."""
+    import shutil
+    
+    # Check if streamlit is available
+    streamlit_cmd = shutil.which("streamlit")
+    if not streamlit_cmd:
+        print("Error: Streamlit is not installed.")
+        print("\nTo install the dashboard dependencies, run:")
+        print('  pip install "ami-engine[dashboard]"')
+        print("\nOr install streamlit and plotly separately:")
+        print("  pip install streamlit plotly")
+        sys.exit(2)
+    
     dashboard_path = ROOT / "visualization" / "dashboard.py"
     if not dashboard_path.exists():
         print(f"Error: Dashboard not found at {dashboard_path}")
         sys.exit(1)
+    
     cmd = ["streamlit", "run", str(dashboard_path)]
     if args.port:
         cmd.extend(["--server.port", str(args.port)])

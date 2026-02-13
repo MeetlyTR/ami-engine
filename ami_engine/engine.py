@@ -40,7 +40,8 @@ from core.temporal_drift import (
     should_preemptively_escalate,
 )
 
-TRACE_VERSION = "1.0"
+# TRACE_VERSION is imported from ami_engine.trace_types (single source of truth)
+from ami_engine.trace_types import TRACE_VERSION
 
 # Regülasyon-grade: key order + whitespace yok + Unicode stabil (hash tutarlılığı)
 def _trace_to_canonical(trace: Union[Dict[str, Any], List[Dict[str, Any]]]) -> bytes:

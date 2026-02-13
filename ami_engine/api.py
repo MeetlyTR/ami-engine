@@ -27,7 +27,8 @@ def decide(
         raw_state: Dictionary containing state variables (risk, severity, etc.)
         profile: Config profile name (e.g., "scenario_test", "production_safe")
                  If None, uses default "base" profile
-        deterministic: If True, same input produces same output (default: True)
+        deterministic: If True, same input produces same output (exact match).
+                       See AUDITABILITY.md for determinism contract details (default: True)
         context: Optional context dict (e.g., {"cus_history": [...]})
     
     Returns:
