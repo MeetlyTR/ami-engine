@@ -149,7 +149,7 @@ def cmd_demo(args):
                   f"human={trace.get('human_escalation', False)}")
     
     # CSV Export
-    print(f"\nExporting CSV...")
+    print("\nExporting CSV...")
     csv_columns = [
         "t", "level", "cus", "raw_action", "final_action", 
         "human_escalation", "soft_clamp", "confidence", "latency_ms"
@@ -165,7 +165,7 @@ def cmd_demo(args):
             writer.writerow(row)
     
     # Replay Validation (sample)
-    print(f"\nValidating replay (sample of 5 traces)...")
+    print("\nValidating replay (sample of 5 traces)...")
     replay_errors = 0
     sample_size = min(5, len(traces))
     for i in range(sample_size):
@@ -187,28 +187,28 @@ def cmd_demo(args):
     print("Run Summary")
     print("=" * 60)
     print(f"Total traces: {args.steps}")
-    print(f"\nEscalation Levels:")
+    print("\nEscalation Levels:")
     print(f"  L0 (Normal):     {level_counts[0]:4d} ({level_counts[0]/args.steps*100:5.1f}%)")
     print(f"  L1 (Soft-safe): {level_counts[1]:4d} ({level_counts[1]/args.steps*100:5.1f}%)")
     print(f"  L2 (Fail-safe): {level_counts[2]:4d} ({level_counts[2]/args.steps*100:5.1f}%)")
-    print(f"\nSafety Features:")
+    print("\nSafety Features:")
     print(f"  Human escalations: {human_escalations:4d} ({human_escalations/args.steps*100:5.1f}%)")
     print(f"  Soft clamp applied: {soft_clamp_count:4d} ({soft_clamp_count/args.steps*100:5.1f}%)")
     if cus_values:
-        print(f"\nCUS Statistics:")
+        print("\nCUS Statistics:")
         print(f"  Mean CUS: {mean(cus_values):.3f}")
         print(f"  Min CUS:  {min(cus_values):.3f}")
         print(f"  Max CUS:  {max(cus_values):.3f}")
     if latencies:
-        print(f"\nPerformance:")
+        print("\nPerformance:")
         print(f"  Mean latency: {mean(latencies):.2f} ms")
         print(f"  Max latency:  {max(latencies):.2f} ms")
     
-    print(f"\nOutput Files:")
+    print("\nOutput Files:")
     print(f"  JSONL: {output_file}")
     print(f"  CSV:   {csv_file}")
-    print(f"\nNext Steps:")
-    print(f"  1. View traces: ami-engine dashboard")
+    print("\nNext Steps:")
+    print("  1. View traces: ami-engine dashboard")
     print(f"  2. Load file: {output_file}")
     print(f"  3. Analyze CSV: {csv_file}")
 
