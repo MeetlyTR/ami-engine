@@ -6,16 +6,9 @@ This module provides a simplified, user-friendly API for the AMI-ENGINE library.
 
 from typing import Any, Dict, List, Optional, Union
 
-# Import from parent directory (backward compatibility)
-import sys
-from pathlib import Path
-
-_parent = Path(__file__).resolve().parent.parent.parent
-if str(_parent) not in sys.path:
-    sys.path.insert(0, str(_parent))
-
-from engine import moral_decision_engine as _moral_decision_engine
-from engine import replay as _replay
+# Import from package (no sys.path hacks)
+from ami_engine.engine import moral_decision_engine as _moral_decision_engine
+from ami_engine.engine import replay as _replay
 
 
 def decide(
