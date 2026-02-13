@@ -1,13 +1,13 @@
 # AMI-ENGINE core modülleri (Phase 2 spec).
+# This is a compatibility shim - actual core modules are at repo root.
 
-# Import from parent core package (relative import)
+# Import from repo root core package
 import sys
 from pathlib import Path
 
-# Add parent core directory to path
-_core_parent = Path(__file__).resolve().parent.parent.parent / "core"
-if str(_core_parent) not in sys.path:
-    sys.path.insert(0, str(_core_parent.parent))
+_root = Path(__file__).resolve().parent.parent.parent
+if str(_root) not in sys.path:
+    sys.path.insert(0, str(_root))
 
 from core.state_encoder import encode_state, State
 from core.action_generator import generate_actions

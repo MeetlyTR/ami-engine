@@ -1,15 +1,16 @@
 # AMI-ENGINE Phase 4.6 — Config profile loader.
 # get_config(profile_name) → engine/config_override uyumlu dict.
+# This is a compatibility shim - actual config_profiles are at repo root.
 
 from typing import Any, Dict, List
 
-# Import from parent config_profiles package
+# Import from repo root config_profiles package
 import sys
 from pathlib import Path
 
-_config_profiles_parent = Path(__file__).resolve().parent.parent.parent / "config_profiles"
-if str(_config_profiles_parent) not in sys.path:
-    sys.path.insert(0, str(_config_profiles_parent.parent))
+_root = Path(__file__).resolve().parent.parent.parent
+if str(_root) not in sys.path:
+    sys.path.insert(0, str(_root))
 
 from config_profiles.base import DEFAULT_CONFIG
 from config_profiles.production_safe import CONFIG as PRODUCTION_SAFE_CONFIG

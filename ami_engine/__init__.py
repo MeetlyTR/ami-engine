@@ -7,16 +7,25 @@ Public API - Stable interface for external use.
 # Version
 __version__ = "1.0.0"
 
-# Import trace version from types
-from ami_engine.types import TRACE_VERSION
+# Import trace version from trace_types
+from ami_engine.trace_types import TRACE_VERSION
 
 # Simplified API (recommended for new users)
 from ami_engine.api import decide, replay_trace
 
 # Full API (for advanced users)
 from ami_engine.engine import moral_decision_engine, replay
-from ami_engine.core.trace_collector import TraceCollector, build_decision_trace
-from ami_engine.config_profiles import get_config, list_profiles
+
+# Import from repo root packages (not ami_engine subpackages)
+import sys
+from pathlib import Path
+
+_root = Path(__file__).resolve().parent.parent
+if str(_root) not in sys.path:
+    sys.path.insert(0, str(_root))
+
+from core.trace_collector import TraceCollector, build_decision_trace
+from config_profiles import get_config, list_profiles
 
 # Re-export for convenience
 __all__ = [
