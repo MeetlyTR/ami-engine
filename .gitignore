@@ -28,6 +28,7 @@ venv/
 env/
 ENV/
 .venv
+.venv_test/
 
 # IDE
 .vscode/
@@ -53,6 +54,7 @@ traces_*.jsonl
 traces_*.csv
 archive/
 *.log
+examples_traces.jsonl
 
 # Streamlit
 .streamlit/

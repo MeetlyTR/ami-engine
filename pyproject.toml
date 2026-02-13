@@ -8,7 +8,7 @@ version = "1.0.0"
 description = "AMI-ENGINE: Ethical Decision Engine with L0/L1/L2 escalation, soft clamp, and auditability"
 readme = "README.md"
 requires-python = ">=3.8"
-license = {text = "Apache-2.0"}
+license = "Apache-2.0"
 authors = [
     {name = "Mucahit Muzaffer", email = "mucahit.muzaffer@gmail.com"}
 ]
@@ -20,7 +20,6 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
@@ -57,6 +56,8 @@ ami-engine = "ami_engine.cli:main"
 [tool.setuptools]
 # Auto-discover packages (includes ami_engine, core, config_profiles, etc.)
 packages = {find = {}}
+# Include root-level modules
+py-modules = ["engine", "config"]
 
 [tool.setuptools.package-data]
 ami_engine = ["py.typed"]

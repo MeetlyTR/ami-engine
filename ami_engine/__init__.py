@@ -18,6 +18,10 @@ _parent = Path(__file__).resolve().parent.parent
 if str(_parent) not in sys.path:
     sys.path.insert(0, str(_parent))
 
+# Simplified API (recommended for new users)
+from ami_engine.api import decide, replay_trace
+
+# Full API (for advanced users)
 from engine import moral_decision_engine, replay
 from core.trace_collector import TraceCollector, build_decision_trace
 from config_profiles import get_config, list_profiles
@@ -26,6 +30,10 @@ from config_profiles import get_config, list_profiles
 __all__ = [
     "__version__",
     "TRACE_VERSION",
+    # Simplified API (recommended)
+    "decide",
+    "replay_trace",
+    # Full API (advanced)
     "moral_decision_engine",
     "replay",
     "TraceCollector",

@@ -40,28 +40,50 @@ pip install ami-engine
 
 ### Python API
 
+**Simplified API (Recommended):**
+
 ```python
-from ami_engine import moral_decision_engine, get_config
+from ami_engine import decide
 
 # Raw state (comes from domain adapter)
 raw_state = {
     "risk": 0.7,
     "severity": 0.8,
-    "context": {...}
+    "physical": 0.6,
+    "social": 0.5,
+    "context": 0.4,
+    "compassion": 0.5,
+    "justice": 0.9,
+    "harm_sens": 0.5,
+    "responsibility": 0.7,
+    "empathy": 0.6,
 }
 
 # Make decision
-result = moral_decision_engine(
-    raw_state,
-    config_override="scenario_test",  # or get_config("scenario_test")
-    context={"cus_history": []}
-)
+result = decide(raw_state, profile="scenario_test")
 
 # Result
 action = result["action"]  # [severity, intervention, compassion, delay]
 level = result["escalation"]  # 0, 1, or 2
 human_escalation = result["human_escalation"]  # True/False
 ```
+
+**Full API (Advanced):**
+
+```python
+from ami_engine import moral_decision_engine, replay_trace
+
+result = moral_decision_engine(
+    raw_state,
+    config_override="scenario_test",
+    context={"cus_history": []}
+)
+
+# Replay trace
+replayed = replay_trace(result["trace"], validate=True)
+```
+
+See `examples/` directory for more examples.
 
 ### CLI
 
@@ -132,6 +154,19 @@ Example adapters:
 
 ---
 
+## Examples
+
+See the `examples/` directory for complete examples:
+
+- **hello_world.py**: Simplest usage example
+- **replay_example.py**: Trace replay demonstration
+- **trace_collection.py**: Collecting multiple traces
+
+Run examples:
+```bash
+python examples/hello_world.py
+```
+
 ## Documentation
 
 - **README.md** (this file): Overview
@@ -139,6 +174,7 @@ Example adapters:
 - **SAFETY_LIMITATIONS.md**: Safety boundaries and warnings
 - **AUDITABILITY.md**: Auditability and trace schema
 - **CHANGELOG.md**: Version history
+- **examples/README.md**: Example usage guide
 
 ---
 
