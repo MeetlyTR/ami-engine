@@ -55,24 +55,43 @@ def cmd_tests(args):
 
 
 def cmd_demo(args):
-    """Run proof-of-concept demo."""
+    """Run proof-of-concept demo with validation and summary."""
     import time
     import sys
+    import json
+    import csv
     from pathlib import Path
+    from statistics import mean
     
     # Import from repo root
     _root = Path(__file__).resolve().parent.parent.parent
     if str(_root) not in sys.path:
         sys.path.insert(0, str(_root))
     
-    from ami_engine import decide
+    from ami_engine import decide, replay_trace
     from core.trace_collector import TraceCollector, build_decision_trace
+    
+    output_file = args.out or "traces_demo.jsonl"
+    csv_file = output_file.replace(".jsonl", ".csv")
+    
+    # Clear existing files
+    Path(output_file).write_text("", encoding="utf-8")
+    Path(csv_file).write_text("", encoding="utf-8")
     
     print("=" * 60)
     print("AMI-ENGINE Proof-of-Concept Demo")
     print("=" * 60)
     
-    collector = TraceCollector(jsonl_path="demo_traces.jsonl")
+    collector = TraceCollector(jsonl_path=output_file)
+    ctx = {"cus_history": []}
+    
+    # Statistics tracking
+    level_counts = {0: 0, 1: 0, 2: 0}
+    human_escalations = 0
+    soft_clamp_count = 0
+    cus_values = []
+    latencies = []
+    traces = []
     
     # Generate sample decisions
     print(f"\nGenerating {args.steps} decisions...")
@@ -91,26 +110,94 @@ def cmd_demo(args):
         }
         
         t_before = time.perf_counter()
-        result = decide(raw_state, profile=args.profile or "scenario_test")
+        result = decide(raw_state, profile=args.profile or "scenario_test", context=ctx)
         t_after = time.perf_counter()
         latency_ms = (t_after - t_before) * 1000
         
         trace = build_decision_trace(result, t=i, latency_ms=latency_ms)
         collector.push(trace)
+        traces.append((result, trace))
+        
+        # Collect statistics
+        level = trace.get("level", 0)
+        level_counts[level] = level_counts.get(level, 0) + 1
+        if trace.get("human_escalation"):
+            human_escalations += 1
+        if trace.get("soft_clamp"):
+            soft_clamp_count += 1
+        if trace.get("cus") is not None:
+            cus_values.append(trace["cus"])
+        if latency_ms is not None:
+            latencies.append(latency_ms)
         
         if (i + 1) % 10 == 0:
-            print(f"  [{i+1:03d}] L{trace['level']} cus={trace.get('cus', 0):.3f} "
+            cus = trace.get("cus", 0)
+            print(f"  [{i+1:03d}] L{level} cus={cus:.3f} "
                   f"human={trace.get('human_escalation', False)}")
     
-        # TraceCollector doesn't have close(), it auto-flushes
+    # CSV Export
+    print(f"\nExporting CSV...")
+    csv_columns = [
+        "t", "level", "cus", "raw_action", "final_action", 
+        "human_escalation", "soft_clamp", "confidence", "latency_ms"
+    ]
     
-    print(f"\n[OK] Generated {args.steps} traces")
-    print(f"   Saved to: {collector._jsonl_path}")
-    jsonl_file = str(collector._jsonl_path) if collector._jsonl_path else "demo_traces.jsonl"
-    print(f"\nNext steps:")
-    print(f"   1. View traces: ami-engine dashboard")
-    print(f"   2. Load file: {jsonl_file}")
-    print(f"   3. Check CSV export from dashboard")
+    with open(csv_file, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=csv_columns)
+        writer.writeheader()
+        for _, trace in traces:
+            row = {k: trace.get(k) for k in csv_columns}
+            row["raw_action"] = str(row.get("raw_action", []))
+            row["final_action"] = str(row.get("final_action", []))
+            writer.writerow(row)
+    
+    # Replay Validation (sample)
+    print(f"\nValidating replay (sample of 5 traces)...")
+    replay_errors = 0
+    sample_size = min(5, len(traces))
+    for i in range(sample_size):
+        result, trace = traces[i]
+        try:
+            replayed = replay_trace(result["trace"], validate=True)
+            if replayed["action"] != result["action"]:
+                replay_errors += 1
+        except Exception as e:
+            replay_errors += 1
+    
+    if replay_errors == 0:
+        print(f"  [OK] Replay validation passed ({sample_size}/{sample_size})")
+    else:
+        print(f"  [WARN] Replay validation: {sample_size - replay_errors}/{sample_size} passed")
+    
+    # Summary
+    print("\n" + "=" * 60)
+    print("Run Summary")
+    print("=" * 60)
+    print(f"Total traces: {args.steps}")
+    print(f"\nEscalation Levels:")
+    print(f"  L0 (Normal):     {level_counts[0]:4d} ({level_counts[0]/args.steps*100:5.1f}%)")
+    print(f"  L1 (Soft-safe): {level_counts[1]:4d} ({level_counts[1]/args.steps*100:5.1f}%)")
+    print(f"  L2 (Fail-safe): {level_counts[2]:4d} ({level_counts[2]/args.steps*100:5.1f}%)")
+    print(f"\nSafety Features:")
+    print(f"  Human escalations: {human_escalations:4d} ({human_escalations/args.steps*100:5.1f}%)")
+    print(f"  Soft clamp applied: {soft_clamp_count:4d} ({soft_clamp_count/args.steps*100:5.1f}%)")
+    if cus_values:
+        print(f"\nCUS Statistics:")
+        print(f"  Mean CUS: {mean(cus_values):.3f}")
+        print(f"  Min CUS:  {min(cus_values):.3f}")
+        print(f"  Max CUS:  {max(cus_values):.3f}")
+    if latencies:
+        print(f"\nPerformance:")
+        print(f"  Mean latency: {mean(latencies):.2f} ms")
+        print(f"  Max latency:  {max(latencies):.2f} ms")
+    
+    print(f"\nOutput Files:")
+    print(f"  JSONL: {output_file}")
+    print(f"  CSV:   {csv_file}")
+    print(f"\nNext Steps:")
+    print(f"  1. View traces: ami-engine dashboard")
+    print(f"  2. Load file: {output_file}")
+    print(f"  3. Analyze CSV: {csv_file}")
 
 
 def main():
