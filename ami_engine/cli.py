@@ -106,9 +106,10 @@ def cmd_demo(args):
     
     print(f"\n[OK] Generated {args.steps} traces")
     print(f"   Saved to: {collector._jsonl_path}")
+    jsonl_file = str(collector._jsonl_path) if collector._jsonl_path else "demo_traces.jsonl"
     print(f"\nNext steps:")
     print(f"   1. View traces: ami-engine dashboard")
-    print(f"   2. Load file: {collector.jsonl_path}")
+    print(f"   2. Load file: {jsonl_file}")
     print(f"   3. Check CSV export from dashboard")
 
 
