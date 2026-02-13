@@ -7,98 +7,98 @@
 
 ---
 
-## Ne Yapar?
+## What It Does
 
-AMI-ENGINE, **etik karar verme** için bir **regülasyon-grade** motorudur. Ham durum (raw state) alır, moral skorlar (Justice, Harm, Compassion) hesaplar, ve **üç seviyeli escalation** (L0/L1/L2) ile güvenli aksiyon üretir.
+AMI-ENGINE is a **regulation-grade** engine for **ethical decision-making**. It takes raw state as input, computes moral scores (Justice, Harm, Compassion), and produces safe actions through **three-level escalation** (L0/L1/L2).
 
-### Temel Özellikler
+### Core Features
 
-- **L0/L1/L2 Escalation**: Otomatik karar → Soft clamp → Human escalation
-- **Soft Clamp**: Güvenlik sınırlarını aşan ham çıktıları yumuşak biçimde sınırlar
-- **Auditability**: Her karar için tam trace (JSONL/CSV) + replay desteği
-- **Temporal Drift**: CUS (Cumulative Uncertainty Score) ile zaman içinde belirsizlik takibi
-- **Config Profiles**: Senaryo bazlı eşik ayarları (scenario_test, production_safe, vb.)
-
----
-
-## Ne Yapmaz?
-
-- ❌ **Domain-specific karar vermez**: Bu bir **karar regülatörü**; alan bilgisi adapter katmanından gelir
-- ❌ **Kişisel veri işlemez**: Ham state'i domain adapter'ından alır; veri toplama/gözetim yapmaz
-- ❌ **Otomatik yaptırım uygulamaz**: L2'de human escalation zorunludur
-- ❌ **Gözetim/kimlik tespiti yapmaz**: Bu kullanımlar yasaktır (USAGE_POLICY.md)
+- **L0/L1/L2 Escalation**: Automatic decision → Soft clamp → Human escalation
+- **Soft Clamp**: Softly constrains raw outputs that exceed safety boundaries
+- **Auditability**: Full trace (JSONL/CSV) for every decision + replay support
+- **Temporal Drift**: Uncertainty tracking over time via CUS (Cumulative Uncertainty Score)
+- **Config Profiles**: Scenario-based threshold settings (scenario_test, production_safe, etc.)
 
 ---
 
-## Kurulum
+## What It Doesn't Do
+
+- ❌ **Does not make domain-specific decisions**: This is a **decision regulator**; domain knowledge comes from the adapter layer
+- ❌ **Does not process personal data**: Receives raw state from domain adapter; does not collect/surveil data
+- ❌ **Does not apply automatic sanctions**: Human escalation is mandatory at L2
+- ❌ **Does not perform surveillance/identification**: These uses are prohibited (see USAGE_POLICY.md)
+
+---
+
+## Installation
 
 ```bash
 pip install ami-engine
 ```
 
-## Hızlı Başlangıç
+## Quick Start
 
 ### Python API
 
 ```python
 from ami_engine import moral_decision_engine, get_config
 
-# Ham durum (domain adapter'ından gelir)
+# Raw state (comes from domain adapter)
 raw_state = {
     "risk": 0.7,
     "severity": 0.8,
     "context": {...}
 }
 
-# Karar al
+# Make decision
 result = moral_decision_engine(
     raw_state,
-    config_override="scenario_test",  # veya get_config("scenario_test")
+    config_override="scenario_test",  # or get_config("scenario_test")
     context={"cus_history": []}
 )
 
-# Sonuç
+# Result
 action = result["action"]  # [severity, intervention, compassion, delay]
-level = result["escalation"]  # 0, 1, veya 2
+level = result["escalation"]  # 0, 1, or 2
 human_escalation = result["human_escalation"]  # True/False
 ```
 
 ### CLI
 
 ```bash
-# Dashboard başlat
+# Start dashboard
 ami-engine dashboard
 
-# Canlı test (90 saniye)
+# Live test (90 seconds)
 ami-engine realtime --duration 90 --profile scenario_test
 
-# Test suite çalıştır
+# Run test suite
 ami-engine tests
 ```
 
 ---
 
-## L0/L1/L2 Anlamı
+## L0/L1/L2 Meaning
 
-- **L0**: Otomatik karar — motor güvenli aksiyon üretti
-- **L1**: Soft clamp uygulandı — ham çıktı sınırlandı, ama otomatik devam ediyor
-- **L2**: Human escalation — insan kararı gerekli (fail-safe tetiklendi)
+- **L0**: Automatic decision — engine produced a safe action
+- **L1**: Soft clamp applied — raw output was constrained, but continues automatically
+- **L2**: Human escalation — human decision required (fail-safe triggered)
 
-Her seviye trace'de `level` alanı ile işaretlenir.
+Each level is marked in the trace via the `level` field.
 
 ---
 
-## Trace ve Auditability
+## Trace and Auditability
 
-Her karar için tam trace üretilir:
+Full trace is generated for every decision:
 
-- **JSONL**: `traces_live.jsonl` (her satır bir trace)
-- **CSV**: `traces_live.csv` (raw vs final action karşılaştırması)
-- **Dashboard**: `ami-engine dashboard` ile görselleştirme
+- **JSONL**: `traces_live.jsonl` (each line is a trace)
+- **CSV**: `traces_live.csv` (raw vs final action comparison)
+- **Dashboard**: Visualization via `ami-engine dashboard`
 
-Trace şeması: `TRACE_VERSION = "1.0"` (değişikliklerde versiyon artar).
+Trace schema: `TRACE_VERSION = "1.0"` (version increments on changes).
 
-**Replay**: `replay(trace)` ile aynı kararı tekrar üret.
+**Replay**: Reproduce the same decision with `replay(trace)`.
 
 ---
 
@@ -107,10 +107,10 @@ Trace şeması: `TRACE_VERSION = "1.0"` (değişikliklerde versiyon artar).
 ```python
 from ami_engine import get_config, list_profiles
 
-# Mevcut profiller
+# Available profiles
 print(list_profiles())  # ['base', 'scenario_test', 'production_safe', ...]
 
-# Profile kullan
+# Use profile
 config = get_config("scenario_test")
 result = moral_decision_engine(raw_state, config_override=config)
 ```
@@ -119,43 +119,43 @@ result = moral_decision_engine(raw_state, config_override=config)
 
 ## Adapter Pattern
 
-AMI-ENGINE domain-agnostic'tır. Domain'e bağlanmak için **adapter** katmanı gerekir:
+AMI-ENGINE is domain-agnostic. An **adapter** layer is required to connect to a domain:
 
 ```
 Domain Input → Adapter → raw_state → AMI-ENGINE → action → Adapter → Domain Output
 ```
 
-Örnek adapter'lar:
-- Chat mesajları → risk skoru → raw_state
-- Sensör verileri → fiziksel risk → raw_state
-- Müşteri talepleri → aciliyet skoru → raw_state
+Example adapters:
+- Chat messages → risk score → raw_state
+- Sensor data → physical risk → raw_state
+- Customer requests → urgency score → raw_state
 
 ---
 
-## Dokümantasyon
+## Documentation
 
-- **README.md** (bu dosya): Genel bakış
-- **USAGE_POLICY.md**: Kullanım politikası ve yasaklar
-- **SAFETY_LIMITATIONS.md**: Güvenlik sınırları ve uyarılar
-- **AUDITABILITY.md**: Denetlenebilirlik ve trace şeması
-- **CHANGELOG.md**: Sürüm geçmişi
-
----
-
-## Lisans
-
-Apache-2.0 License — Detaylar için LICENSE dosyasına bakın.
+- **README.md** (this file): Overview
+- **USAGE_POLICY.md**: Usage policy and prohibitions
+- **SAFETY_LIMITATIONS.md**: Safety boundaries and warnings
+- **AUDITABILITY.md**: Auditability and trace schema
+- **CHANGELOG.md**: Version history
 
 ---
 
-## Katkıda Bulunma
+## License
 
-Issue açmak ve PR göndermek için GitHub repository'ye bakın.
-
-**Security**: Güvenlik açığı bildirimi için lütfen özel kanal kullanın (USAGE_POLICY.md'de belirtilmiştir).
+Apache-2.0 License — See LICENSE file for details.
 
 ---
 
-## Versiyon
+## Contributing
 
-**1.0.0** — İlk stabil sürüm
+See the GitHub repository to open issues and submit PRs.
+
+**Security**: Please use the private channel for security vulnerability reports (specified in USAGE_POLICY.md).
+
+---
+
+## Version
+
+**1.0.0** — First stable release

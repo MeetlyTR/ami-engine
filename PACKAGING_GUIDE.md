@@ -1,13 +1,13 @@
-# AMI-ENGINE Paketleme Kılavuzu
+# AMI-ENGINE Packaging Guide
 
 **Version**: 1.0  
 **Last Updated**: 2026-02-13
 
 ---
 
-## Paket Yapısı
+## Package Structure
 
-Mevcut yapı korunarak paketleme yapılmıştır:
+Packaging is done while preserving the existing structure:
 
 ```
 ami-engine/
@@ -30,15 +30,15 @@ ami-engine/
 
 ---
 
-## Kurulum (Development)
+## Installation (Development)
 
-### 1. Editable Install (Geliştirme)
+### 1. Editable Install (Development)
 
 ```bash
 pip install -e .
 ```
 
-Bu şekilde kod değişiklikleri anında yansır.
+This way code changes are reflected immediately.
 
 ### 2. Normal Install
 
@@ -48,7 +48,7 @@ pip install .
 
 ---
 
-## Paket Oluşturma (Distribution)
+## Package Building (Distribution)
 
 ### 1. Source Distribution (sdist)
 
@@ -56,7 +56,7 @@ pip install .
 python -m build --sdist
 ```
 
-Çıktı: `dist/ami-engine-1.0.0.tar.gz`
+Output: `dist/ami-engine-1.0.0.tar.gz`
 
 ### 2. Wheel Distribution
 
@@ -64,9 +64,9 @@ python -m build --sdist
 python -m build --wheel
 ```
 
-Çıktı: `dist/ami_engine-1.0.0-py3-none-any.whl`
+Output: `dist/ami_engine-1.0.0-py3-none-any.whl`
 
-### 3. Her İkisi Birden
+### 3. Both Together
 
 ```bash
 python -m build
@@ -74,38 +74,38 @@ python -m build
 
 ---
 
-## PyPI'ye Yayınlama
+## Publishing to PyPI
 
-### 1. TestPyPI (Önce Test Et)
+### 1. TestPyPI (Test First)
 
 ```bash
-# TestPyPI'ye yükle
+# Upload to TestPyPI
 python -m twine upload --repository testpypi dist/*
 
-# TestPyPI'den kur
+# Install from TestPyPI
 pip install --index-url https://test.pypi.org/simple/ ami-engine
 ```
 
 ### 2. Production PyPI
 
 ```bash
-# PyPI'ye yükle
+# Upload to PyPI
 python -m twine upload dist/*
 ```
 
-**Not:** PyPI hesabı ve API token gerekir.
+**Note:** PyPI account and API token required.
 
 ---
 
-## CLI Kullanımı
+## CLI Usage
 
-Kurulumdan sonra:
+After installation:
 
 ```bash
-# Dashboard başlat
+# Start dashboard
 ami-engine dashboard
 
-# Canlı test
+# Live test
 ami-engine realtime --duration 90 --profile scenario_test
 
 # Test suite
@@ -131,31 +131,31 @@ from ami_engine import (
 
 ## Backward Compatibility
 
-Mevcut kodlar çalışmaya devam eder:
+Existing code continues to work:
 
 ```python
-# Eski import'lar hala çalışır (kökteki dosyalar korunur)
+# Old imports still work (root files are preserved)
 from engine import moral_decision_engine
 from config_profiles import get_config
 ```
 
 ---
 
-## Versiyonlama
+## Versioning
 
-SemVer kullanılır: `MAJOR.MINOR.PATCH`
+SemVer is used: `MAJOR.MINOR.PATCH`
 
 - **MAJOR**: Breaking changes
-- **MINOR**: Yeni özellikler (backward compatible)
-- **PATCH**: Bug fix'ler
+- **MINOR**: New features (backward compatible)
+- **PATCH**: Bug fixes
 
-Versiyon `pyproject.toml` içinde `version = "1.0.0"` olarak belirtilir.
+Version is specified in `pyproject.toml` as `version = "1.0.0"`.
 
 ---
 
-## Dokümantasyon Dosyaları
+## Documentation Files
 
-Paket içinde şu dosyalar dahil edilir (MANIFEST.in ile):
+The following files are included in the package (via MANIFEST.in):
 
 - README.md
 - LICENSE
@@ -166,13 +166,13 @@ Paket içinde şu dosyalar dahil edilir (MANIFEST.in ile):
 
 ---
 
-## Geliştirme Bağımlılıkları
+## Development Dependencies
 
 ```bash
 pip install -e ".[dev]"
 ```
 
-Bu şu paketleri kurar:
+This installs:
 - pytest
 - pytest-cov
 - black
@@ -180,39 +180,39 @@ Bu şu paketleri kurar:
 
 ---
 
-## Test
+## Testing
 
 ```bash
-# Test suite çalıştır
+# Run test suite
 ami-engine tests
 
-# veya direkt
+# or directly
 python run_all_tests.py
 ```
 
 ---
 
-## Sorun Giderme
+## Troubleshooting
 
-### Import Hatası
+### Import Error
 
-Eğer `ami_engine` import edilemiyorsa:
+If `ami_engine` cannot be imported:
 
 ```bash
-# Editable install yap
+# Do editable install
 pip install -e .
 ```
 
-### CLI Çalışmıyor
+### CLI Not Working
 
 ```bash
-# PATH kontrolü
+# Check PATH
 which ami-engine
 
-# Yeniden kur
+# Reinstall
 pip install --force-reinstall -e .
 ```
 
 ---
 
-**Son Güncelleme**: 2026-02-13
+**Last Updated**: 2026-02-13

@@ -5,127 +5,127 @@
 
 ---
 
-## Özet
+## Summary
 
-AMI-ENGINE bir **etik karar regülatörü**dür. Bu doküman, kütüphanenin **yasak ve uygunsuz kullanımlarını** tanımlar.
-
----
-
-## Yasak Kullanımlar
-
-### 1. Gözetim ve Kimlik Tespiti
-
-**YASAK:**
-- Halka açık kamera görüntülerinden kişi/plaka tespiti
-- Toplu gözetim sistemleri
-- Kişisel veri toplama ve işleme (KVKK/GDPR ihlali riski)
-
-**Neden:** AMI-ENGINE domain-agnostic'tır; veri toplama yapmaz. Bu tip kullanımlar adapter katmanında olur ve **domain'in sorumluluğundadır**.
-
-### 2. Otomatik Yaptırım ve Cezalandırma
-
-**YASAK:**
-- L2 (human escalation) olmadan otomatik yaptırım
-- Kişi hedefleme ve cezalandırma otomasyonu
-- İnsan müdahalesi olmadan karar uygulama
-
-**Neden:** L2 seviyesinde `human_escalation=True` zorunludur. Bu, "insan kararı gerekli" anlamına gelir.
-
-### 3. Kişisel Veri İşleme
-
-**YASAK:**
-- KVKK/GDPR kapsamındaki kişisel verileri işleme
-- Sağlık verileri, finansal veriler gibi hassas bilgileri direkt işleme
-
-**Not:** Domain adapter'ı bu verileri **anonim skorlara** dönüştürmelidir (örn. risk skoru, aciliyet skoru).
+AMI-ENGINE is an **ethical decision regulator**. This document defines **prohibited and inappropriate uses** of the library.
 
 ---
 
-## Uygunsuz Kullanımlar (Önerilmez)
+## Prohibited Uses
 
-### 1. Domain Bilgisi Olmadan Klinik/Operasyon Kararı
+### 1. Surveillance and Identification
 
-**Uyarı:** AMI-ENGINE domain bilgisi içermez. Klinik veya operasyonel kararlar için **domain uzmanı** ve **adapter katmanı** şarttır.
+**PROHIBITED:**
+- Person/license plate identification from public camera footage
+- Mass surveillance systems
+- Personal data collection and processing (GDPR/KVKK violation risk)
 
-### 2. Varsayılan Config ile Production
+**Why:** AMI-ENGINE is domain-agnostic; it does not collect data. Such uses occur in the adapter layer and are **the domain's responsibility**.
 
-**Uyarı:** Varsayılan config (`base`) bilinçli olarak **sıkı** ayarlanmıştır. Production için `production_safe` veya domain'e özel config kullanın.
+### 2. Automatic Sanctions and Punishment
+
+**PROHIBITED:**
+- Automatic sanctions without L2 (human escalation)
+- Person targeting and punishment automation
+- Decision enforcement without human intervention
+
+**Why:** At L2 level, `human_escalation=True` is mandatory. This means "human decision required".
+
+### 3. Personal Data Processing
+
+**PROHIBITED:**
+- Processing personal data under GDPR/KVKK
+- Direct processing of sensitive information such as health data, financial data
+
+**Note:** Domain adapter must convert this data into **anonymous scores** (e.g., risk score, urgency score).
 
 ---
 
-## Doğru Kullanım Örnekleri
+## Inappropriate Uses (Not Recommended)
 
-### ✅ Chat Moderasyonu (Risk Skoru)
+### 1. Clinical/Operational Decisions Without Domain Knowledge
+
+**Warning:** AMI-ENGINE does not contain domain knowledge. **Domain expert** and **adapter layer** are required for clinical or operational decisions.
+
+### 2. Production with Default Config
+
+**Warning:** Default config (`base`) is intentionally set to **strict**. Use `production_safe` or domain-specific config for production.
+
+---
+
+## Correct Usage Examples
+
+### ✅ Chat Moderation (Risk Score)
 
 ```python
-# Adapter: Chat mesajı → risk skoru
+# Adapter: Chat message → risk score
 risk_score = analyze_message(message)  # Domain adapter
 raw_state = {"risk": risk_score, "severity": 0.5, ...}
 result = moral_decision_engine(raw_state)
-# L2 ise → human moderator çağır
+# If L2 → call human moderator
 ```
 
-### ✅ Sensör/IoT (Fiziksel Risk)
+### ✅ Sensor/IoT (Physical Risk)
 
 ```python
-# Adapter: Sensör verileri → fiziksel risk
+# Adapter: Sensor data → physical risk
 physical_risk = analyze_sensors(temp, pressure, ...)  # Domain adapter
 raw_state = {"risk": physical_risk, "severity": 0.8, ...}
 result = moral_decision_engine(raw_state)
-# L2 ise → operatör çağır
+# If L2 → call operator
 ```
 
-### ✅ Müşteri Talepleri (Aciliyet)
+### ✅ Customer Requests (Urgency)
 
 ```python
-# Adapter: Müşteri talebi → aciliyet skoru
+# Adapter: Customer request → urgency score
 urgency = analyze_request(request)  # Domain adapter
 raw_state = {"risk": urgency, "severity": 0.6, ...}
 result = moral_decision_engine(raw_state)
-# L2 ise → human agent çağır
+# If L2 → call human agent
 ```
 
 ---
 
-## Human-in-the-Loop Şartı
+## Human-in-the-Loop Requirement
 
-**Zorunlu:** L2 seviyesinde (`level == 2` veya `human_escalation == True`) **mutlaka** insan kararı alınmalıdır.
+**Mandatory:** At L2 level (`level == 2` or `human_escalation == True`), **human decision must be obtained**.
 
 ```python
 result = moral_decision_engine(raw_state)
 if result["human_escalation"]:
-    # ZORUNLU: İnsan kararı al
+    # MANDATORY: Get human decision
     human_decision = await get_human_review(result)
-    # Human decision'ı uygula
+    # Apply human decision
 ```
 
 ---
 
-## Kısıt İhlali → Fail-Safe Zorunluluğu
+## Constraint Violation → Fail-Safe Requirement
 
-Eğer adapter katmanı AMI-ENGINE'in beklediği format dışında veri gönderirse:
+If the adapter layer sends data in a format other than what AMI-ENGINE expects:
 
-- Motor **fail-safe** moduna geçer
-- `human_escalation=True` döner
-- Güvenli varsayılan aksiyon (`safe_action`) üretilir
+- Engine enters **fail-safe** mode
+- Returns `human_escalation=True`
+- Produces safe default action (`safe_action`)
 
-**Bu durumda:** Adapter katmanını düzeltmek ve trace'leri incelemek gerekir.
+**In this case:** Adapter layer must be fixed and traces must be examined.
 
 ---
 
 ## Support Policy
 
-- **Community Support**: GitHub Issues üzerinden
-- **Best Effort**: Mümkün olduğunca hızlı yanıt
-- **No SLA**: Garanti edilmiş yanıt süresi yok
-- **Security Contact**: Güvenlik açığı için özel kanal (GitHub Security Advisory)
+- **Community Support**: Via GitHub Issues
+- **Best Effort**: Respond as quickly as possible
+- **No SLA**: No guaranteed response time
+- **Security Contact**: Private channel for security vulnerabilities (GitHub Security Advisory)
 
 ---
 
-## Yasal Uyarı
+## Legal Disclaimer
 
-Bu kütüphane **"AS IS"** sağlanır. Kullanım sorumluluğu **kullanıcıya** aittir. Domain'e özel yasal/etik gereksinimler (KVKK, GDPR, HIPAA, vb.) **domain adapter katmanında** ele alınmalıdır.
+This library is provided **"AS IS"**. Usage responsibility belongs to **the user**. Domain-specific legal/ethical requirements (GDPR, KVKK, HIPAA, etc.) must be handled in **the domain adapter layer**.
 
 ---
 
-**Son Güncelleme**: 2026-02-13
+**Last Updated**: 2026-02-13

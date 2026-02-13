@@ -43,10 +43,10 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/ami-engine"
-Documentation = "https://github.com/yourusername/ami-engine/blob/main/README.md"
-Repository = "https://github.com/yourusername/ami-engine"
-Issues = "https://github.com/yourusername/ami-engine/issues"
+Homepage = "https://github.com/MeetlyTR/ami-engine"
+Documentation = "https://github.com/MeetlyTR/ami-engine/blob/main/README.md"
+Repository = "https://github.com/MeetlyTR/ami-engine"
+Issues = "https://github.com/MeetlyTR/ami-engine/issues"
 
 [project.scripts]
 ami-engine = "ami_engine.cli:main"

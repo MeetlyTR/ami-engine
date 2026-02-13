@@ -5,136 +5,136 @@
 
 ---
 
-## Güvenlik Sınırları
+## Safety Boundaries
 
-### 1. Domain Verisi Olmadan Klinik/Operasyon Kararı Vermez
+### 1. Does Not Make Clinical/Operational Decisions Without Domain Data
 
-AMI-ENGINE **domain-agnostic** bir karar regülatörüdür. Klinik veya operasyonel kararlar için:
+AMI-ENGINE is a **domain-agnostic** decision regulator. For clinical or operational decisions:
 
-- ✅ **Gerekli**: Domain uzmanı + adapter katmanı
-- ❌ **Yetersiz**: Sadece AMI-ENGINE
+- ✅ **Required**: Domain expert + adapter layer
+- ❌ **Insufficient**: AMI-ENGINE alone
 
-**Örnek:** Bir hasta durumu için karar vermek için:
-- Domain adapter: Tıbbi verileri → risk skorlarına dönüştürür
-- AMI-ENGINE: Risk skorlarından → escalation seviyesi belirler
-- Domain adapter: Escalation seviyesine göre → tıbbi protokol uygular
+**Example:** To make a decision for a patient condition:
+- Domain adapter: Converts medical data → risk scores
+- AMI-ENGINE: Determines escalation level from risk scores
+- Domain adapter: Applies medical protocol based on escalation level
 
-### 2. Bu Bir Karar REGÜLATÖRÜ; Alan Kararı Değil
+### 2. This Is a Decision REGULATOR; Not a Domain Decision
 
-AMI-ENGINE **"nasıl karar verilir"** sorusunu yanıtlar, **"ne kararı verilir"** sorusunu değil.
+AMI-ENGINE answers **"how to decide"**, not **"what decision to make"**.
 
-- ✅ **Yapar**: Etik skorlama, escalation, güvenlik sınırları
-- ❌ **Yapmaz**: Domain-specific karar mantığı (örn. "bu hasta için hangi ilaç?")
+- ✅ **Does**: Ethical scoring, escalation, safety boundaries
+- ❌ **Does not**: Domain-specific decision logic (e.g., "which drug for this patient?")
 
-### 3. Varsayılan Config Bilinçli Olarak Sıkı
+### 3. Default Config Is Intentionally Strict
 
-`base` config profile'ı **güvenlik odaklı** ayarlanmıştır:
+The `base` config profile is set to **security-focused**:
 
-- Yüksek eşikler (J_MIN, H_MAX)
-- Agresif fail-safe tetikleme
-- Düşük confidence threshold'ları
+- High thresholds (J_MIN, H_MAX)
+- Aggressive fail-safe triggering
+- Low confidence thresholds
 
-**Production için:** `production_safe` veya domain'e özel config kullanın.
+**For production:** Use `production_safe` or domain-specific config.
 
 ---
 
-## Teknik Sınırlar
+## Technical Limitations
 
-### 1. Determinism ve Replay
+### 1. Determinism and Replay
 
-- **Deterministic mod**: `deterministic=True` ile aynı input → aynı output
-- **Replay**: `replay(trace)` ile aynı kararı tekrar üret
-- **Hash**: `compute_trace_hash(trace)` ile trace bütünlüğü kontrol edilebilir
+- **Deterministic mode**: Same input → same output with `deterministic=True`
+- **Replay**: Reproduce the same decision with `replay(trace)`
+- **Hash**: Trace integrity can be checked with `compute_trace_hash(trace)`
 
-**Sınır:** Non-deterministic mod (`deterministic=False`) ile replay tutarsız olabilir.
+**Limit:** Replay may be inconsistent with non-deterministic mode (`deterministic=False`).
 
 ### 2. Temporal Drift (CUS)
 
-- **CUS History**: `context={"cus_history": [...]}` ile zaman içinde belirsizlik takibi
-- **Preemptive Escalation**: Yüksek CUS artışında erken escalation
+- **CUS History**: Uncertainty tracking over time with `context={"cus_history": [...]}`
+- **Preemptive Escalation**: Early escalation on high CUS increase
 
-**Sınır:** CUS history yoksa temporal drift hesaplanamaz.
+**Limit:** Temporal drift cannot be calculated if CUS history is missing.
 
 ### 3. Soft Clamp
 
-- **Etki**: Ham çıktıyı güvenlik sınırlarına çeker
-- **Garanti Yok**: Soft clamp her zaman fark yaratmayabilir (ham çıktı zaten sınırda ise)
+- **Effect**: Pulls raw output to safety boundaries
+- **No Guarantee**: Soft clamp may not always make a difference (if raw output is already at boundary)
 
-**Sınır:** %100 clamp garantisi yok; trace'lerde `soft_clamp=True` ve `raw_action != final_action` kontrol edilmeli.
+**Limit:** No 100% clamp guarantee; check `soft_clamp=True` and `raw_action != final_action` in traces.
 
 ---
 
-## Bilinen Sınırlamalar
+## Known Limitations
 
 ### 1. Action Space
 
-- **Sabit boyut**: 4 bileşen (severity, intervention, compassion, delay)
-- **Değer aralığı**: [0, 1] (normalize edilmiş)
+- **Fixed size**: 4 components (severity, intervention, compassion, delay)
+- **Value range**: [0, 1] (normalized)
 
-**Domain uyumu:** Domain adapter'ı bu formatı domain'e çevirmelidir.
+**Domain compatibility:** Domain adapter must convert this format to domain.
 
 ### 2. Config Override
 
-- **String profile**: `config_override="scenario_test"` → `get_config()` çağrılır
-- **Dict override**: `config_override={"J_MIN": 0.3, ...}` → direkt kullanılır
+- **String profile**: `config_override="scenario_test"` → calls `get_config()`
+- **Dict override**: `config_override={"J_MIN": 0.3, ...}` → used directly
 
-**Sınır:** Kısmi override yok; ya tam dict ya da profile adı.
+**Limit:** No partial override; either full dict or profile name.
 
 ### 3. Trace Schema Versioning
 
-- **Mevcut**: `TRACE_VERSION = "1.0"`
-- **Değişiklik**: Schema değişirse versiyon artar
+- **Current**: `TRACE_VERSION = "1.0"`
+- **Change**: Version increments if schema changes
 
-**Uyumluluk:** Eski trace'ler `replay()` ile çalışmaya devam eder (backward compatibility).
+**Compatibility:** Old traces continue to work with `replay()` (backward compatibility).
 
 ---
 
-## Güvenlik Uyarıları
+## Security Warnings
 
 ### 1. Input Validation
 
-AMI-ENGINE `raw_state` formatını **varsayar**. Yanlış format:
+AMI-ENGINE **assumes** `raw_state` format. Wrong format:
 
-- Fail-safe tetiklenir
-- `human_escalation=True` döner
-- Güvenli varsayılan aksiyon üretilir
+- Fail-safe is triggered
+- Returns `human_escalation=True`
+- Produces safe default action
 
-**Öneri:** Domain adapter'ında input validation yapın.
+**Recommendation:** Perform input validation in domain adapter.
 
 ### 2. Output Validation
 
-AMI-ENGINE'in ürettiği `action` her zaman [0,1]⁴ aralığındadır. Ama:
+AMI-ENGINE's produced `action` is always in [0,1]⁴ range. But:
 
-- Domain adapter'ı bu değerleri **domain'e uygun** şekilde yorumlamalıdır
-- L2 seviyesinde **mutlaka** human review gerekir
+- Domain adapter must interpret these values **appropriately for domain**
+- **Human review is mandatory** at L2 level
 
-### 3. Trace Güvenliği
+### 3. Trace Security
 
-Trace'ler **hassas bilgi içerebilir** (domain adapter'ından gelen raw_state).
+Traces **may contain sensitive information** (raw_state from domain adapter).
 
-- **Güvenlik**: Trace'leri güvenli saklayın (encryption, access control)
-- **GDPR/KVKK**: Kişisel veri içeren trace'ler için yasal gereksinimler uygulanmalı
-
----
-
-## Performans Sınırları
-
-- **Latency**: Ortalama 1-5ms (trace dahil)
-- **Throughput**: Saniyede 100-1000 karar (donanıma bağlı)
-- **Memory**: Trace buffer için ~1KB/trace
-
-**Ölçüm:** Trace'lerde `latency_ms` alanı ile gerçek performans izlenebilir.
+- **Security**: Store traces securely (encryption, access control)
+- **GDPR/KVKK**: Legal requirements apply for traces containing personal data
 
 ---
 
-## Destek ve Güncellemeler
+## Performance Limits
 
-- **Breaking Changes**: MAJOR versiyon artışında (örn. 1.0 → 2.0)
-- **Backward Compatibility**: MINOR/PATCH versiyonlarda korunur
-- **Deprecation**: Eski API'ler bir MINOR versiyon boyunca uyarı ile kullanılabilir
+- **Latency**: Average 1-5ms (including trace)
+- **Throughput**: 100-1000 decisions per second (hardware dependent)
+- **Memory**: ~1KB/trace for trace buffer
 
-Detaylar için **CHANGELOG.md**'ye bakın.
+**Measurement:** Real performance can be monitored via `latency_ms` field in traces.
 
 ---
 
-**Son Güncelleme**: 2026-02-13
+## Support and Updates
+
+- **Breaking Changes**: On MAJOR version increment (e.g., 1.0 → 2.0)
+- **Backward Compatibility**: Maintained in MINOR/PATCH versions
+- **Deprecation**: Old APIs can be used with warnings for one MINOR version
+
+See **CHANGELOG.md** for details.
+
+---
+
+**Last Updated**: 2026-02-13

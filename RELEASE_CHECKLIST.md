@@ -5,80 +5,80 @@
 
 ---
 
-## ✅ Tamamlanan Adımlar
+## ✅ Completed Steps
 
-### 1. Paketleme Altyapısı
-- [x] `pyproject.toml` oluşturuldu (setuptools, SemVer 1.0.0)
-- [x] `MANIFEST.in` oluşturuldu (doküman dosyaları dahil)
-- [x] `LICENSE` (Apache-2.0) eklendi
-- [x] `ami_engine/__init__.py` (Public API wrapper) oluşturuldu
-- [x] `ami_engine/cli.py` (CLI entry point) oluşturuldu
+### 1. Packaging Infrastructure
+- [x] `pyproject.toml` created (setuptools, SemVer 1.0.0)
+- [x] `MANIFEST.in` created (documentation files included)
+- [x] `LICENSE` (Apache-2.0) added
+- [x] `ami_engine/__init__.py` (Public API wrapper) created
+- [x] `ami_engine/cli.py` (CLI entry point) created
 
-### 2. Dokümantasyon
-- [x] `README.md` (genel bakış, kurulum, hızlı başlangıç)
-- [x] `USAGE_POLICY.md` (yasak kullanımlar, human-in-the-loop)
-- [x] `SAFETY_LIMITATIONS.md` (güvenlik sınırları, teknik sınırlar)
-- [x] `AUDITABILITY.md` (trace şeması, replay, hash)
-- [x] `CHANGELOG.md` (sürüm geçmişi)
-- [x] `PACKAGING_GUIDE.md` (paketleme kılavuzu)
+### 2. Documentation
+- [x] `README.md` (overview, installation, quick start)
+- [x] `USAGE_POLICY.md` (prohibited uses, human-in-the-loop)
+- [x] `SAFETY_LIMITATIONS.md` (safety boundaries, technical limits)
+- [x] `AUDITABILITY.md` (trace schema, replay, hash)
+- [x] `CHANGELOG.md` (version history)
+- [x] `PACKAGING_GUIDE.md` (packaging guide)
 
-### 3. Public API Sabitleme
-- [x] `moral_decision_engine()` export edildi
-- [x] `replay()` export edildi
-- [x] `TraceCollector`, `build_decision_trace` export edildi
-- [x] `get_config()`, `list_profiles()` export edildi
+### 3. Public API Stabilization
+- [x] `moral_decision_engine()` exported
+- [x] `replay()` exported
+- [x] `TraceCollector`, `build_decision_trace` exported
+- [x] `get_config()`, `list_profiles()` exported
 
 ### 4. CLI
-- [x] `ami-engine dashboard` komutu
-- [x] `ami-engine realtime` komutu
-- [x] `ami-engine tests` komutu
+- [x] `ami-engine dashboard` command
+- [x] `ami-engine realtime` command
+- [x] `ami-engine tests` command
 
 ---
 
-## 🔄 Yapılacaklar (Release Öncesi)
+## 🔄 To Do (Pre-Release)
 
-### 1. Test ve Doğrulama
-- [ ] `pip install -e .` ile editable install test et
-- [ ] `ami-engine dashboard` çalışıyor mu?
-- [ ] `ami-engine realtime --duration 10` çalışıyor mu?
-- [ ] `ami-engine tests` çalışıyor mu?
-- [ ] Public API import'ları çalışıyor mu?
+### 1. Testing and Validation
+- [ ] Test editable install with `pip install -e .`
+- [ ] Does `ami-engine dashboard` work?
+- [ ] Does `ami-engine realtime --duration 10` work?
+- [ ] Does `ami-engine tests` work?
+- [ ] Do public API imports work?
 
-### 2. PyPI Hazırlığı
-- [ ] GitHub repository URL'lerini güncelle (`pyproject.toml` içinde)
-- [ ] PyPI hesabı oluştur (veya mevcut hesabı kullan)
-- [ ] API token oluştur (PyPI → Account Settings → API tokens)
+### 2. PyPI Preparation
+- [ ] Update GitHub repository URLs (in `pyproject.toml`)
+- [ ] Create PyPI account (or use existing account)
+- [ ] Create API token (PyPI → Account Settings → API tokens)
 
-### 3. Build ve Test
-- [ ] `python -m build` ile paket oluştur
-- [ ] `python -m twine check dist/*` ile kontrol et
-- [ ] TestPyPI'ye yükle ve test et
-- [ ] TestPyPI'den kur ve çalıştır
+### 3. Build and Test
+- [ ] Build package with `python -m build`
+- [ ] Check with `python -m twine check dist/*`
+- [ ] Upload to TestPyPI and test
+- [ ] Install from TestPyPI and run
 
 ### 4. Final Release
-- [ ] Production PyPI'ye yükle
-- [ ] GitHub release oluştur
-- [ ] Dokümantasyonu güncelle (gerekirse)
+- [ ] Upload to production PyPI
+- [ ] Create GitHub release
+- [ ] Update documentation (if needed)
 
 ---
 
-## 📋 Release Notları
+## 📋 Release Notes
 
 ### Version 1.0.0 (2026-02-13)
 
-**İlk Stabil Sürüm**
+**First Stable Release**
 
-- Public API sabitlendi
-- CLI eklendi
-- Dokümantasyon tamamlandı
-- Paketleme altyapısı hazır
+- Public API stabilized
+- CLI added
+- Documentation completed
+- Packaging infrastructure ready
 
 ---
 
-## 🚀 Hızlı Başlangıç (Release Sonrası)
+## 🚀 Quick Start (Post-Release)
 
 ```bash
-# Kurulum
+# Installation
 pip install ami-engine
 
 # Dashboard
@@ -90,4 +90,4 @@ ami-engine tests
 
 ---
 
-**Son Güncelleme**: 2026-02-13
+**Last Updated**: 2026-02-13

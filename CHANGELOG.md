@@ -13,31 +13,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Public API**: `moral_decision_engine()`, `replay()`, `TraceCollector`, `build_decision_trace()`, `get_config()`, `list_profiles()`
 - **CLI**: `ami-engine dashboard`, `ami-engine realtime`, `ami-engine tests`
-- **Trace Schema v1.0**: JSONL/CSV export, raw vs final action karşılaştırması
+- **Trace Schema v1.0**: JSONL/CSV export, raw vs final action comparison
 - **Dashboard**: Streamlit-based observability dashboard
 - **Config Profiles**: scenario_test, production_safe, high_critical, chaos_tuning, clamp_test
-- **Soft Clamp**: Güvenlik sınırlarını aşan ham çıktıları yumuşak biçimde sınırlama
-- **L0/L1/L2 Escalation**: Otomatik karar → Soft clamp → Human escalation
-- **Temporal Drift**: CUS (Cumulative Uncertainty Score) ile zaman içinde belirsizlik takibi
+- **Soft Clamp**: Softly constrains raw outputs that exceed safety boundaries
+- **L0/L1/L2 Escalation**: Automatic decision → Soft clamp → Human escalation
+- **Temporal Drift**: Uncertainty tracking over time via CUS (Cumulative Uncertainty Score)
 - **Auditability**: Trace hash, replay, CSV export
 - **Documentation**: README, USAGE_POLICY, SAFETY_LIMITATIONS, AUDITABILITY
 
 ### Changed
 
 - **Trace Format**: Versioned trace schema (TRACE_VERSION = "1.0")
-- **CSV Export**: Raw kolonları eklendi (raw_severity, raw_intervention, raw_compassion, raw_delay)
-- **Dashboard**: Soft clamp filtre, level timeline, clamp etkisi metrikleri
+- **CSV Export**: Raw columns added (raw_severity, raw_intervention, raw_compassion, raw_delay)
+- **Dashboard**: Soft clamp filter, level timeline, clamp effect metrics
 
 ### Fixed
 
-- JSONL parse hatalarında satır atlama (robustness)
-- CSV export'ta raw kolonları eksikliği sorunu
+- JSONL parse error handling (row skipping for robustness)
+- Missing raw columns in CSV export issue
 
 ### Security
 
-- **Fail-Safe**: Varsayılan olarak agresif fail-safe tetikleme
-- **Human Escalation**: L2 seviyesinde zorunlu insan kararı
-- **Input Validation**: Yanlış format → fail-safe + human_escalation
+- **Fail-Safe**: Aggressive fail-safe triggering by default
+- **Human Escalation**: Mandatory human decision at L2 level
+- **Input Validation**: Wrong format → fail-safe + human_escalation
 
 ---
 
@@ -55,8 +55,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Versioning
 
 - **MAJOR** (1.0 → 2.0): Breaking changes
-- **MINOR** (1.0 → 1.1): Yeni özellikler (backward compatible)
-- **PATCH** (1.0.0 → 1.0.1): Bug fix'ler
+- **MINOR** (1.0 → 1.1): New features (backward compatible)
+- **PATCH** (1.0.0 → 1.0.1): Bug fixes
 
 ---
 
