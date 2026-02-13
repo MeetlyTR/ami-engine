@@ -1,0 +1,73 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ami-engine"
+version = "1.0.0"
+description = "AMI-ENGINE: Ethical Decision Engine with L0/L1/L2 escalation, soft clamp, and auditability"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "AMI-ENGINE Contributors"}
+]
+keywords = ["ethics", "decision-making", "safety", "ai", "moral-reasoning", "auditability"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dependencies = [
+    "streamlit>=1.28.0",
+    "plotly>=5.17.0",
+    "numpy>=1.24.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/ami-engine"
+Documentation = "https://github.com/yourusername/ami-engine/blob/main/README.md"
+Repository = "https://github.com/yourusername/ami-engine"
+Issues = "https://github.com/yourusername/ami-engine/issues"
+
+[project.scripts]
+ami-engine = "ami_engine.cli:main"
+
+[tool.setuptools]
+# Auto-discover packages (includes ami_engine, core, config_profiles, etc.)
+packages = {find = {}}
+
+[tool.setuptools.package-data]
+ami_engine = ["py.typed"]
+
+[tool.black]
+line-length = 100
+target-version = ["py38", "py39", "py310", "py311", "py312"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py38"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
