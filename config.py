@@ -7,7 +7,23 @@
 #   from ami_engine import config
 #   from ami_engine.config import DEFAULT_WEIGHTS
 
-from ami_engine.config import *
+# Lazy import to avoid circular dependencies
+import sys
+from types import ModuleType
+
+# Create a proxy module that imports from ami_engine.config on first access
+class _ConfigProxy(ModuleType):
+    def __getattr__(self, name):
+        # Import only when needed
+        from ami_engine import config as _real_config
+        return getattr(_real_config, name)
+    
+    def __dir__(self):
+        from ami_engine import config as _real_config
+        return dir(_real_config)
+
+# Replace this module with the proxy
+sys.modules[__name__] = _ConfigProxy(__name__)
 
 __all__ = [
     "DEFAULT_UNKNOWN",

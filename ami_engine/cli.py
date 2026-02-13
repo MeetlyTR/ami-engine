@@ -102,7 +102,7 @@ def cmd_demo(args):
             print(f"  [{i+1:03d}] L{trace['level']} cus={trace.get('cus', 0):.3f} "
                   f"human={trace.get('human_escalation', False)}")
     
-    collector.close()
+        # TraceCollector doesn't have close(), it auto-flushes
     
     print(f"\n✅ Generated {args.steps} traces")
     print(f"   Saved to: {collector.jsonl_path}")
