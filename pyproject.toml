@@ -74,8 +74,11 @@ ami-engine = "ami_engine.cli:main"
 [tool.setuptools]
 # Auto-discover packages (includes ami_engine, core, config_profiles, etc.)
 packages = {find = {}}
-# Include root-level modules
+# Include root-level modules and packages
 py-modules = ["engine", "config"]
+# Include root-level packages (core, config_profiles)
+# These are needed for backward compatibility imports
+package-dir = {"" = "."}
 
 [tool.setuptools.package-data]
 ami_engine = ["py.typed"]

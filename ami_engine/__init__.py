@@ -18,9 +18,22 @@ from ami_engine.engine import moral_decision_engine, replay
 
 # Import from repo root packages
 # Note: core/ and config_profiles/ are at repo root for backward compatibility
-# When installed as package, these are accessible via py-modules in pyproject.toml
-from core.trace_collector import TraceCollector, build_decision_trace
-from config_profiles import get_config, list_profiles
+# When installed as package, these should be accessible via setuptools package discovery
+try:
+    from core.trace_collector import TraceCollector, build_decision_trace
+    from config_profiles import get_config, list_profiles
+except ImportError:
+    # Fallback: if core/config_profiles not found (shouldn't happen in normal install)
+    # Try importing from shim modules
+    try:
+        from ami_engine.core.trace_collector import TraceCollector, build_decision_trace
+        from ami_engine.config_profiles import get_config, list_profiles
+    except ImportError:
+        # Last resort: these won't be available
+        TraceCollector = None
+        build_decision_trace = None
+        get_config = None
+        list_profiles = None
 
 # Re-export for convenience
 __all__ = [
