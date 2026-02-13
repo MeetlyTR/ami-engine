@@ -104,9 +104,18 @@ For end users and developers:
 4. **docs/development/RUN_TESTS.md** - Testing guide
 
 ### For Researchers
-1. **docs/specs/** - Complete specification documents
-2. **AUDITABILITY.md** - Trace schema and replay mechanism
-3. **docs/reports/** - Analysis and validation reports
+1. **docs/RESEARCH_BRIEF.md** - One-page research overview
+2. **docs/ACADEMIC_PRESENTATION.md** - 10-slide academic presentation
+3. **docs/specs/** - Complete specification documents
+4. **AUDITABILITY.md** - Trace schema and replay mechanism
+5. **docs/reports/** - Analysis and validation reports
+
+### For Industry/Corporate
+1. **docs/CORPORATE_PITCH.md** - Corporate value proposition
+2. **docs/GOLDEN_EXAMPLE.md** - Complete healthcare use case example
+3. **docs/EMAIL_TEMPLATES.md** - Professional outreach templates
+4. **USAGE_POLICY.md** - Usage guidelines and compliance
+5. **AUDITABILITY.md** - Audit trail and compliance features
 
 ---
 
