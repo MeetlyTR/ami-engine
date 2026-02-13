@@ -16,27 +16,11 @@ from ami_engine.api import decide, replay_trace
 # Full API (for advanced users)
 from ami_engine.engine import moral_decision_engine, replay
 
-# Import from repo root packages via shim modules
-# Note: These are backward compatibility shims that import from repo root
-# The actual modules are at repo root, not in the package
-try:
-    # Try importing from repo root (when installed as package)
-    import sys
-    from pathlib import Path
-    
-    _root = Path(__file__).resolve().parent.parent
-    if str(_root) not in sys.path:
-        sys.path.insert(0, str(_root))
-    
-    from core.trace_collector import TraceCollector, build_decision_trace
-    from config_profiles import get_config, list_profiles
-except ImportError:
-    # Fallback: if core/config_profiles not found, these won't be available
-    # This should only happen in very unusual setups
-    TraceCollector = None
-    build_decision_trace = None
-    get_config = None
-    list_profiles = None
+# Import from repo root packages
+# Note: core/ and config_profiles/ are at repo root for backward compatibility
+# When installed as package, these are accessible via py-modules in pyproject.toml
+from core.trace_collector import TraceCollector, build_decision_trace
+from config_profiles import get_config, list_profiles
 
 # Re-export for convenience
 __all__ = [

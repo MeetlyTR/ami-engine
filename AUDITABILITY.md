@@ -80,6 +80,47 @@ CSV format export from dashboard or `tools/csv_export.py`:
 
 ---
 
+## Determinism Contract
+
+AMI-ENGINE guarantees **deterministic behavior** under specific conditions:
+
+### Determinism Guarantee
+
+**When `deterministic=True` (default):**
+- Same input state → same output action (exact match)
+- Same trace → same replayed action (exact match)
+- Floating-point operations use deterministic algorithms
+- No external randomness sources (OS entropy, system time, etc.)
+
+### Determinism Scope
+
+**Guaranteed:**
+- Action selection (4-element list)
+- Escalation level (0, 1, or 2)
+- Moral scores (J, H, W, C)
+- Confidence scores
+- Trace structure and content
+
+**Not guaranteed (by design):**
+- Trace timestamps (`created_at`, `latency_ms`) - system-dependent
+- Random state generation (if provided by caller)
+- External context updates (if modified outside engine)
+
+### Determinism Validation
+
+Replay validation uses **exact match** (no tolerance):
+- `replay_trace(trace, validate=True)` compares actions byte-for-byte
+- Hash verification (`verify_hash=True`) ensures trace integrity
+- Test suite validates determinism across 1000+ scenarios
+
+### Breaking Determinism
+
+Determinism may be broken by:
+- Setting `deterministic=False` (explicit opt-out)
+- Modifying context dict between calls
+- Using non-deterministic state generators
+- System-level floating-point precision differences (extremely rare)
+
 ## Determinism and Hash
 
 ### Deterministic Mode
