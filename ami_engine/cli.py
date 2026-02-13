@@ -57,8 +57,16 @@ def cmd_tests(args):
 def cmd_demo(args):
     """Run proof-of-concept demo."""
     import time
+    import sys
+    from pathlib import Path
+    
+    # Import from repo root
+    _root = Path(__file__).resolve().parent.parent.parent
+    if str(_root) not in sys.path:
+        sys.path.insert(0, str(_root))
+    
     from ami_engine import decide
-    from ami_engine.core.trace_collector import TraceCollector, build_decision_trace
+    from core.trace_collector import TraceCollector, build_decision_trace
     
     print("=" * 60)
     print("AMI-ENGINE Proof-of-Concept Demo")

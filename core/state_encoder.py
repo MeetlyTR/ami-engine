@@ -4,7 +4,11 @@
 from dataclasses import dataclass
 from typing import Any, Dict
 
-from config import DEFAULT_UNKNOWN
+# Import from repo root config (backward compat) or ami_engine.config
+try:
+    from ami_engine.config import DEFAULT_UNKNOWN
+except ImportError:
+    from config import DEFAULT_UNKNOWN
 
 
 @dataclass(frozen=True)
