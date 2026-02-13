@@ -7,10 +7,11 @@ import json
 import random
 from typing import Any, Dict, List, Optional, Union
 
-from ami_engine from ami_engine import config as _config
+from ami_engine import config as _config
 from ami_engine.config import DEFAULT_WEIGHTS
 
 # Import from parent core package (relative import)
+# Note: core/ is at repo root, not in ami_engine package
 import sys
 from pathlib import Path
 
