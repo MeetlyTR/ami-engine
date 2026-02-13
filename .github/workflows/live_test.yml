@@ -80,7 +80,7 @@ jobs:
         "
 
     - name: Upload traces as artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: traces_live_${{ github.run_number }}
         path: |
