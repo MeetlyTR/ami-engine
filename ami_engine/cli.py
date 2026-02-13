@@ -144,7 +144,7 @@ def main():
     tests_parser.set_defaults(func=cmd_tests)
 
     # Demo command
-    demo_parser = subparsers.add_parser("demo", help="Run proof-of-concept demo")
+    demo_parser = subparsers.add_parser("demo", help="Run proof-of-concept demo with validation")
     demo_parser.add_argument(
         "--steps", type=int, default=30, help="Number of decisions to generate (default: 30)"
     )
@@ -152,6 +152,11 @@ def main():
         "--profile",
         type=str,
         help="Config profile (default: scenario_test)",
+    )
+    demo_parser.add_argument(
+        "--out",
+        type=str,
+        help="Output JSONL file (default: traces_demo.jsonl)",
     )
     demo_parser.set_defaults(func=cmd_demo)
 

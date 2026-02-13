@@ -2,6 +2,43 @@
 
 Thank you for your interest in contributing to AMI-ENGINE!
 
+## Contributor License Agreement (CLA)
+
+**AMI-ENGINE does not require a CLA (Contributor License Agreement).**
+
+By contributing code, documentation, or other materials to this project, you agree that your contributions will be licensed under the same license as the project (Apache-2.0).
+
+## Developer Certificate of Origin (DCO)
+
+While not strictly required, contributors are encouraged to include a "Signed-off-by" line in their commit messages:
+
+```
+Signed-off-by: Your Name <your.email@example.com>
+```
+
+This certifies that you have the right to submit the work under the project's license. You can add this automatically with:
+
+```bash
+git commit -s -m "Your commit message"
+```
+
+## Commercial Support
+
+**Commercial support and consulting services are available** for organizations requiring:
+
+- Custom domain adapters
+- Integration assistance
+- Extended support and maintenance
+- Training and workshops
+- Custom feature development
+
+For commercial inquiries, please contact: **mucahit.muzaffer@gmail.com**
+
+**Support Scope:**
+- **Community Support**: Best-effort via GitHub Issues (no SLA)
+- **Commercial Support**: Defined SLA and response times (contact for details)
+- **Security Issues**: See [SECURITY.md](../SECURITY.md) for reporting process
+
 ---
 
 ## Code of Conduct
