@@ -43,6 +43,11 @@ def main(steps=30, sleep_sec=1.0, profile="scenario_test", jsonl_path="traces_li
         profile: Config profile (default: scenario_test)
         jsonl_path: Çıktı dosyası (default: traces_live.jsonl)
     """
+    # Clear existing file for clean test
+    jsonl_file = Path(jsonl_path)
+    if jsonl_file.exists():
+        jsonl_file.write_text("", encoding="utf-8")
+    
     ctx = {"cus_history": []}
     collector = TraceCollector(max_buffer_size=1000, jsonl_path=jsonl_path)
     
